@@ -26,7 +26,7 @@ O procedimento completo está detalhado nas seções a seguir.
 
 ## Configuração da Máquina Virtual no UTM
 
-Para hospedar o ambiente Debian 11 ARM no Apple Silicon, o **UTM** é o hipervisor recomendado, pois oferece excelente integração com os recursos de virtualização do macOS e suporte a aceleração de hardware.
+Para hospedar o ambiente Debian 11 ARM no Apple Silicon, o **UTM** é o hipervisor recomendado, pois oferece excelente integração com os recursos de virtualização do macOS.
 
 ### Criação e Configuração da VM
 
@@ -152,7 +152,7 @@ Pronto, o aplicativo já abre com 2 cliques! Agora é necessário, ativar o Rose
 
 ## Configuração do Rosetta 2 no Debian
 
-Para montar a unidade compartilhada do Rosetta (disponibilizada pelo framework de virtualização do macOS) e registrá-la para traduzir os binários x86_64/i386 em tempo de execução.
+Para montar a unidade compartilhada do Rosetta (disponibilizada pelo framework de virtualização do macOS) e registrá-la para traduzir os binários x86_64 em tempo de execução.
 
 Primeiro crie um diretório e monte o virtiofs do Rosetta:
 ```bash
