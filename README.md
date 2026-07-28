@@ -22,6 +22,8 @@ openfpgaloader -b <nome_da_sua_placa> caminho/para/o/arquivo.sof
 ```
 O procedimento completo está detalhado nas seções a seguir.
 
+> **Nota**: Este é o registro do processo que segui na minha máquina (MacBook Air M4, macOS Tahoe 26.5.2, UTM 4.7.5). Pode haver pequenas diferenças dependendo da sua configuração.
+
 ## Configuração da Máquina Virtual no UTM
 
 Para hospedar o ambiente Debian 11 ARM no Apple Silicon, o **UTM** é o hipervisor recomendado, pois oferece excelente integração com os recursos de virtualização do macOS e suporte a aceleração de hardware.
