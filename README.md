@@ -373,8 +373,10 @@ vcom project.vhd
 vcom tb_project.vhd 
 vsim tb_project -do "add wave -radix binary *; run 100 ns; wave zoom full; quit"
 ```
+
 <div align="center">
-<img width="60%"  alt="PinPlanner" src="https://github.com/user-attachments/assets/223815f8-3745-42de-b537-338510eb7e32" />
+<img width="49%"  alt="PinPlanner" src="https://github.com/user-attachments/assets/223815f8-3745-42de-b537-338510eb7e32" />
+<img width="49%" alt="ModelSim" src="https://github.com/user-attachments/assets/267614ee-cfde-46c9-8c07-5ec35b1dff85" />
 </div>
 
 ### Regarding the Intel Quartus Prime Lite Edition License
