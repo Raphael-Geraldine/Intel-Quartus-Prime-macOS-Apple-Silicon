@@ -380,9 +380,16 @@ vcom tb_project.vhd
 vsim tb_project -do "add wave -radix binary *; run 100 ns; wave zoom full; quit"
 ```
 
-<div style="display: flex; justify-content: center; gap: 10px;">
-<img width="48%"  alt="PinPlanner" src="https://github.com/user-attachments/assets/223815f8-3745-42de-b537-338510eb7e32" /> <img width="48%" alt="ModelSim" src="https://github.com/user-attachments/assets/267614ee-cfde-46c9-8c07-5ec35b1dff85" />
-</div>
+<table border="0" style="width: 100%;">
+  <tr>
+    <td width="50%" align="center">
+      <img src="https://github.com/user-attachments/assets/223815f8-3745-42de-b537-338510eb7e32" width="100%" alt="PinPlanner" />
+    </td>
+    <td width="50%" align="center">
+      <img src="https://github.com/user-attachments/assets/267614ee-cfde-46c9-8c07-5ec35b1dff85" width="100%" alt="ModelSim" />
+    </td>
+  </tr>
+</table>
 
 ### Regarding the Intel Quartus Prime Lite Edition License
 **Quartus Prime Lite Edition** is distributed for free by Intel/Altera, with an important caveat: the free license covers only a specific list of supported devices—entry-level families such as **Cyclone**, **MAX 10**, and **Arria II**, among others. Medium and high-performance devices (such as the **Arria 10**, **Stratix**, and **Cyclone V GX/GT** families in certain configurations) require a paid license from the **Standard** or **Pro** editions.
