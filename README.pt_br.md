@@ -1,5 +1,7 @@
 # Intel Quartus Prime em Apple Silicon
 
+> **Idiomas:** 🇧🇷 **Português** ou 🇺🇸 [English](https://github.com/Raphael-Geraldine/Intel-Quartus-Prime-macOS-Apple-Silicon/blob/main/README.md)
+
 Este repositório documenta o processo e a configuração necessária para executar o **Intel Quartus Prime 18.1** (uma ferramenta tradicional e legada de desenvolvimento FPGA voltada para arquitetura x86_64) em um **MacBook Air M4 (Apple Silicon)** com **macOS Tahoe 26.5.2**.
 
 <img width="1470" height="956" alt="QuartusNoMac" src="https://github.com/user-attachments/assets/86072088-9405-4d7d-a598-e359692524a2" />
