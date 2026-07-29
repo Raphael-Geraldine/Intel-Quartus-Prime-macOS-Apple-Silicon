@@ -1,102 +1,96 @@
-# Intel Quartus Prime em Apple Silicon
+# Intel Quartus Prime on Apple Silicon
 
-Este repositório documenta o processo e a configuração necessária para executar o **Intel Quartus Prime 18.1** (uma ferramenta tradicional e legada de desenvolvimento FPGA voltada para arquitetura x86_64) em um **MacBook Air M4 (Apple Silicon)** com **macOS Tahoe 26.5.2**.
+This repository documents the process and configuration required to run **Intel Quartus Prime 18.1** (a traditional and legacy FPGA development tool target x86_64 architecture) on a **MacBook Air M4 (Apple Silicon)** running **macOS Tahoe 26.5.2**.
 
 <img width="1470" height="956" alt="QuartusNoMac" src="https://github.com/user-attachments/assets/86072088-9405-4d7d-a598-e359692524a2" />
 
-Como o Quartus 18.1 não possui nativamente suporte para ARM e depende de binários x86_64, a solução implementada utiliza uma máquina virtual **Debian 11 ARM64** com o framework de virtualização do **Rosetta 2** integrado ao kernel do Linux. Essa abordagem permite a tradução e execução transparente de aplicativos x86_64 com alto desempenho diretamente no hardware Apple Silicon, viabilizando o fluxo de projeto, compilação e simulação para FPGAs de forma eficiente e moderna.
+Since Quartus 18.1 lacks native ARM support and relies on x86_64 binaries, the implemented solution uses a **Debian 11 ARM64** virtual machine with the **Rosetta 2** virtualization framework integrated directly into the Linux kernel. This approach enables a high-performance translation and execution of x86_64 applications directly on Apple Silicon hardware, making the FPGA design, compilation, and simulation workflow viable, efficient, and modern.
 
-Para gravação, recomenda-se utilizar a ferramenta `openFPGAloader` que pode ser instalada diretamente no terminal do macOS via homebrew.
+For bitstream loading, it is recommended to use the `openFPGAloader` tool, which can be installed directly in the macOS terminal via Homebrew.
 ```zsh
 brew install openfpgaloader
 ```
-O que elimina a necessidade de configurar o _passthrough_ complexo de portas USB da máquina virtual ARM (Debian) para o hardware físico, algo que frequentemente falha com emuladores/hipervisores. Além de dispensar os drivers proprietários e legados da Intel (como o `jtagd` e os drivers do `USB-Blaster`), que foram projetados para arquiteturas x86 e causam incompatibilidades severas em ambientes virtualizados ou não nativos.
+This eliminates the need to configure complex USB port passthrough from the ARM virtual machine (Debian) to the physical hardware, something that frequently fails with emulators/hypervisors. In addition to eliminating the need for Intel's proprietary and legacy drivers (such as `jtagd` and `USB-Blaster` drivers), which were designed for x86 architectures and cause severe incompatibilities in virtualized or non-native environments.
 
-## Fluxo de Trabalho Recomendado
+## Recommended Workflow
 
-0. **Geração do Bitstream**: Realize a compilação e simulação do projeto no Quartus rodando no Debian 11 ARM com Rosetta 2.
-1. **Transferência**: Compartilhe o arquivo de saída gerado (ex: projeto.sof) com o host macOS através de uma pasta compartilhada da VM.
-2. **Gravação Nativa**: No terminal do macOS, com a placa conectada via USB, execute o comando de gravação:
+0. **Bitstream Generation**: Compile and simulate the project in Quartus running on Debian 11 ARM with Rosetta 2.
+1. **Transfer**: Share the generated output file (e.g., project.sof) with the macOS host through a VM shared folder.
+2. **Native bitstream loading**: In the macOS terminal, with the board connected via USB, run the flashing command:
 ```zsh
-openfpgaloader -b <nome_da_sua_placa> caminho/para/o/arquivo.sof
+openfpgaloader -b <your_board_name> path/to/file.sof
 ```
-O procedimento completo está detalhado nas seções a seguir.
+The complete procedure is detailed in the following sections.
 
-> **Nota**: Este é o registro do processo que segui na minha máquina (MacBook Air M4, macOS Tahoe 26.5.2, UTM 4.7.5). Pode haver pequenas diferenças dependendo da sua configuração.
+> **Note**: This is the record of the process I followed on my machine (MacBook Air M4, macOS Tahoe 26.5.2, UTM 4.7.5). There may be slight differences depending on your setup.
 
-## Configuração da Máquina Virtual no UTM
+## UTM Virtual Machine Setup
 
-Para hospedar o ambiente Debian 11 ARM no Apple Silicon, o **UTM** é o hipervisor recomendado, pois oferece excelente integração com os recursos de virtualização do macOS.
+To host the Debian 11 ARM environment on Apple Silicon, **UTM** is the recommended hypervisor, as it offers excellent integration with macOS virtualization features.
 
-### Criação e Configuração da VM
+### VM Creation and Configuration
 
-0. **Nova Máquina Virtual:** Instale e abra o [UTM](https://mac.getutm.app/) e escolha para criar uma nova VM, selecionando a opção para
-virtualizar Linux e apontando para a imagem `.iso` do [Debian 11 ARM](https://cloud.debian.org/cdimage/archive/11.11.0/arm64/iso-cd/) (`debian-11.11.0-arm64-netinst.iso`).
-Durante a instalação do Debian 11 na máquina virtual, recomenda-se selecionar o ambiente de desktop XFCE.
-1. **Ativação do Rosetta:** Nas configurações da máquina virtual (na seção de sistema/arquitetura), ative a opção de **Rosetta** (suporte
-a binários x86 em ARM). Esse recurso é indispensável, pois permite que o kernel do Debian traduza e execute as instruções x86_64 do Quartus
- 18.1 diretamente, garantindo a compatibilidade do software da Intel.
-2. **Diretório Compartilhado:** Configure uma **pasta compartilhada** nas opções de compartilhamento do UTM, selecionando
-um diretório de sua preferência no host (macOS). Essa pasta facilitará o intercâmbio de arquivos, como os arquivos de projeto
-e o *bitstream* final (`.sof`), entre o sistema hospedeiro e a máquina virtual.
+0. **New Virtual Machine:** Install and open [UTM](https://mac.getutm.app/) and choose to create a new VM, selecting the option to virtualize Linux and pointing to the `.iso` image of [Debian 11 ARM](https://cloud.debian.org/cdimage/archive/11.11.0/arm64/iso-cd/) (`debian-11.11.0-arm64-netinst.iso`).
+During the Debian 11 installation inside the virtual machine, selecting the XFCE desktop environment is recommended.
+1. **Enabling Rosetta:** In the virtual machine settings (under the system/architecture section), enable the **Rosetta** option (support for x86 binaries on ARM). This feature is essential, as it allows the Debian kernel to directly translate and execute Quartus 18.1 x86_64 instructions, ensuring compatibility with Intel software.
+2. **Shared Directory:** Configure a **shared folder** in UTM's sharing options, selecting a directory of your choice on the host (macOS). This folder will facilitate file exchanges, such as project files and the final bitstream (`.sof`), between the host system and the virtual machine.
 
-> **Nota**: particularmente atribui 8 gb de memória ram, 4 cores do M4 e 64 gb de armazenamento, para o linux.  
+> **Note**: I personally assigned 8 GB of RAM, 4 M4 cores, and 64 GB of storage to Linux.  
 
-## Habilitar "Copia e Cola"
-Para habilitar a troca de textos e dados da área de transferência entre o macOS e o Debian, utiliza-se o agente do protocolo SPICE. Instale o pacote no Debian e ative o serviço:
+## Enabling "Copy and Paste"
+To enable sharing text and clipboard data between macOS and Debian, the SPICE protocol agent is used. Install the package in Debian and enable the service:
 ```bash
 sudo apt update
 sudo apt install spice-vdagent
 sudo systemctl enable --now spice-vdagent
 ```
 
-Agora você pode copiar no seu Mac (usando o `command`) e colar no Debian (usando o `control`), e vice versa.
-> Obs: lembrando que para copiar e colar no terminal do Debian deve-se pressionar a tecla `shift` também.
+Now you can copy on your Mac (using `command`) and paste in Debian (using `control`), and vice versa.
+> Note: keep in mind that to copy and paste in the Debian terminal, you must also press the `shift` key..
 
-Agora **reinicie** a máquina virtual.
+Now **restart** the virtual machine.
 
-## Configuração da Pasta Compartilhada
+## Shared Folder Configuration
 
-Para garantir uma experiência de desenvolvimento fluida entre o host (Apple Silicon / macOS) e a máquina virtual
-(Debian ARM no UTM), foram configurados o compartilhamento de arquivos via VirtioFS. O VirtioFS permite o compartilhamento de pastas de alta performance entre o host e a VM, mapeando diretamente o sistema de arquivos.
+To ensure a smooth development experience between the host (Apple Silicon / macOS) and the virtual machine (Debian ARM in UTM), file sharing was configured via VirtioFS. VirtioFS enables high-performance folder sharing between the host and the VM by mapping the filesystem directly.
 
-Para isso, crie o diretório de destino dentro do seu usuário no Debian:
+To do this, create the target directory inside your user folder in Debian:
 ```bash
-mkdir -p /home/SEU_USUARIO/DebianShare
+mkdir -p /home/YOUR_USERNAME/DebianShare
 ```
-Adicione a linha abaixo no arquivo `/etc/fstab` para montar o diretório automaticamente durante o boot da máquina virtual:
+Add the line below to the `/etc/fstab` file to mount the directory automatically during virtual machine boot:
 ```bash
 sudo nano /etc/fstab
 ```
-em seguida cole essa linha
+then paste this line
 ```text
-share /home/SEU_USUARIO/DebianShare virtiofs nofail,defaults 0 0
+share /home/YOUR_USERNAME/DebianShare virtiofs nofail,defaults 0 0
 ```
-Aperte `control + O`, `return` e `control + X`, para sair e salvar.
+Press `control + O`, `return` and `control + X` to save and exit.
 
-Para montar a pasta imediatamente sem precisar reiniciar, basta executar o seguinte comando no terminal do Debian:
+To mount the folder immediately without needing to restart, simply run the following command in the Debian terminal:
 
 ```bash
-sudo mount /home/SEU_USUARIO/DebianShare
+sudo mount /home/YOUR_USERNAME/DebianShare
 ```
-## Atualização do Sistema e Dependências Nativas
-Antes de iniciar a instalação dos componentes do Quartus, é necessário garantir que o sistema esteja atualizado e com as bibliotecas nativas e ferramentas essenciais de compilação instaladas.
+## System Update and Native Dependencies
+Before starting the Quartus components installation, you must ensure the system is up to date and equipped with native libraries and essential build tools.
 
 ```bash
 sudo apt update
 sudo apt install -y build-essential libglib2.0-0 libpng16-16 libfreetype6 libsm6 libice6 libxext6 libxrender1 libfontconfig1 libgl1-mesa-glx libxcb1 libx11-xcb1 libxi6 libxkbcommon0 libdbus-1-3 wget curl
 ```
 
-## Configuração de Variável de Ambiente (`QUARTUS_CPUID_BYPASS`)
-O Quartus possuem verificações e restrições relativas à arquitetura do processador (CPUID). Adicionar esta variável de ambiente ignora essa verificação.
+## Environment Variable Setup (`QUARTUS_CPUID_BYPASS`)
+Quartus performs CPU architecture checks and restrictions based on CPUID. Adding this environment variable bypasses that check.
 
 ```bash
 echo 'export QUARTUS_CPUID_BYPASS=1' >> ~/.bashrc
 source ~/.bashrc
 ```
 
-## Habilitação de Arquitetura `amd64` e Emulação 
-Posteriormente, o Rosetta 2 será habilitado para obter um desempenho superior. No entanto, nesta etapa inicial do processo de instalação, o instalador do Quartus funciona melhor sob o QEMU. Isso ocorre porque o **instalador gráfico** possui dependências legadas de 32 bits (i386/x86) e rotinas específicas que funcionam de forma mais estável e compatível com a emulação do QEMU/binfmt.
+## Enabling `amd64` Architecture and Emulation
+Later on, Rosetta 2 will be enabled to achieve superior performance. However, in this initial stage of the installation process, the Quartus installer works better under QEMU. This is because the **GUI installer** relies on legacy 32-bit (i386/x86) dependencies and specific routines that run more stably and compatibly under QEMU/binfmt emulation.
 
 ```bash
 sudo dpkg --add-architecture amd64
@@ -104,94 +98,94 @@ sudo apt update
 sudo apt install -y qemu-user-static binfmt-support
 ```
 
-## Instalação das Bibliotecas de Compatibilidade Multi-Arquitetura (`amd64`)
-Por fim, instalamos as versões de 64 bits (`amd64`) das bibliotecas gráficas e de sistema essenciais para que o executável x86_64 do Quartus possa rodar perfeitamente no ambiente emulado.
+## Multi-Architecture (`amd64`) Compatibility Libraries Installation
+Finally, we install the 64-bit (`amd64`) versions of essential graphics and system libraries so that the Quartus x86_64 executable can run seamlessly in the emulated environment.
 
 ```bash
 sudo apt update
 sudo apt install -y libc6:amd64 libglib2.0-0:amd64 libpng16-16:amd64 libfreetype6:amd64 libsm6:amd64 libice6:amd64 libxext6:amd64 libxrender1:amd64 libfontconfig1:amd64 libgl1-mesa-glx:amd64 libxcb1:amd64 libx11-xcb1:amd64 libxi6:amd64 libxkbcommon0:amd64 libdbus-1-3:amd64
 ```
-## Instalação do Quartus (versão 18.1)
+## Quartus Installation (version 18.1)
 
-Baixe o instalador do [Intel Quartus Prime Lite](https://www.altera.com/downloads/fpga-development-tools/quartus-prime-lite-edition-design-software-version-18-1-linux) em `.tar` para linux. Com o instalador na VM, extraia o `.tar`:
+Download the [Intel Quartus Prime Lite](https://www.altera.com/downloads/fpga-development-tools/quartus-prime-lite-edition-design-software-version-18-1-linux) `.tar` installer for Linux. Once the installer is inside the VM, extract the `.tar` file:
 
 ```bash
 tar -xvf Quartus-lite-18.1.0.625-linux.tar
 ```
 
-Dê permissão ao script de instalação e inicie-o:
+Grant execution permissions to the installation script and launch it:
 
 ```bash
 chmod +x setup.sh
 ./setup.sh
 ```
 
-O **instalador gráfico** irá abrir, escolha o caminho padrão e siga com as instruções. Marque no final a opção de criar um atalho no desktop.
+The **GUI installer** will open; choose the default path and follow the instructions. At the end, check the option to create a desktop shortcut.
 
 <div align="center">
 <img width="49%" alt="QuartusDownload" src="https://github.com/user-attachments/assets/ee384bf4-54ad-4d61-962c-d46efbe1661a" />
 <img width="49%" alt="Shortcut" src="https://github.com/user-attachments/assets/2aa93535-dc29-4d6c-b14e-5dc0c876f3ca" />
 </div>
 
-> **Nota**: após a instalação se tentar abrir o Quartus não será possível, mas não se preocupe, ainda tem mais alterações a serem feitas.
+> **Note**: After installation if you choose open Quartus, it won't be possible, do not worry, there are still more changes to be made.
 
-### Correção da Biblioteca Legada `libpng12` (Pós-Instalação)
-O Intel Quartus Prime 18.1 depende de uma versão antiga da biblioteca PNG (`libpng12.so.0`) para renderizar ícones e componentes da sua interface gráfica. Como o Debian moderno não disponibiliza mais esse pacote nos repositórios oficiais, extraímos manualmente o binário `amd64` da biblioteca e o colocamos diretamente no diretório de binários do Quartus.
+### Fixing the Legacy `libpng12` Library (Post-Installation)
+Intel Quartus Prime 18.1 relies on an older version of the PNG library (`libpng12.so.0`) to render icons and components in its graphical interface. Since modern Debian no longer provides this package in its official repositories, we manually extract the `amd64` binary of the library and place it directly into the Quartus binaries directory.
 
 ```bash
 wget http://mirrors.kernel.org/ubuntu/pool/main/libp/libpng/libpng12-0_1.2.54-1ubuntu1.1_amd64.deb -O libpng12_amd64.deb
 mkdir -p /tmp/libpng
 dpkg-deb -x libpng12_amd64.deb /tmp/libpng/
-cp /tmp/libpng/lib/x86_64-linux-gnu/libpng12.so.0.54.0 /home/SEU_USUARIO/intelFPGA_lite/18.1/quartus/linux64/libpng12.so.0
+cp /tmp/libpng/lib/x86_64-linux-gnu/libpng12.so.0.54.0 /home/YOUR_USERNAME/intelFPGA_lite/18.1/quartus/linux64/libpng12.so.0
 ```
 
-### Ajuste do Atalho na Área de Trabalho (Desktop)
-No fim da instalação, criamos um atalho na área de trabalho. Para garantir que o aplicativo abra carregando a variável de ambiente necessária (`QUARTUS_CPUID_BYPASS=1`) e apontando diretamente para o caminho das bibliotecas do Quartus (`LD_LIBRARY_PATH`), é necessário modificar a linha de execução (`Exec`) desse atalho específico.
+### Adjusting the Desktop Shortcut
+At the end of the installation, a desktop shortcut was created. To ensure the application launches with the required environment variable (`QUARTUS_CPUID_BYPASS=1`) and explicitly points to the Quartus library path (`LD_LIBRARY_PATH`), you need to modify the execution line (`Exec`) of this specific shortcut.
 
 ```bash
-sed -i 's|^Exec=.*|Exec=env QUARTUS_CPUID_BYPASS=1 LD_LIBRARY_PATH=/home/SEU_USUARIO/intelFPGA_lite/18.1/quartus/linux64 /home/SEU_USUARIO/intelFPGA_lite/18.1/quartus/linux64/quartus|' ~/Desktop/"Quartus (Quartus Prime 18.1) Lite Edition.desktop"
+sed -i 's|^Exec=.*|Exec=env QUARTUS_CPUID_BYPASS=1 LD_LIBRARY_PATH=/home/YOUR_USERNAME/intelFPGA_lite/18.1/quartus/linux64 /home/YOUR_USERNAME/intelFPGA_lite/18.1/quartus/linux64/quartus|' ~/Desktop/"Quartus (Quartus Prime 18.1) Lite Edition.desktop"
 chmod +x ~/Desktop/"Quartus (Quartus Prime 18.1) Lite Edition.desktop"
 ```
 
-Pronto, o aplicativo já abre com 2 cliques! Agora é necessário, ativar o Rosetta 2 para garantir um desempenho superior e possibilitar compilações.
+Done, the application now opens with a double click! Now it's necessary to enable Rosetta 2 to ensure superior performance and make compilations possible.
 
-## Configuração do Rosetta 2 no Debian
+## Rosetta 2 Setup on Debian
 
-Para montar a unidade compartilhada do Rosetta (disponibilizada pelo framework de virtualização do macOS) e registrá-la para traduzir os binários x86_64 em tempo de execução.
+To mount the Rosetta shared drive (provided by the macOS virtualization framework) and register it to translate x86_64 binaries at runtime.
 
-Primeiro crie um diretório e monte o virtiofs do Rosetta:
+First, create a directory and mount Rosetta's virtiofs:
 ```bash
 sudo mkdir -p /media/rosetta
 sudo mount -t virtiofs rosetta /media/rosetta
 ```
 
-Em seguida, registre o Rosetta no binfmt_misc para arquivos ELF x86_64:
+Next, register Rosetta in binfmt_misc for x86_64 ELF files:
 ```bash
 echo -1 | sudo tee /proc/sys/fs/binfmt_misc/rosetta 2>/dev/null || true
 echo ':rosetta:M::\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x3e\x00:\xff\xff\xff\xff\xff\xfe\xfe\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfb\xff\xff\xff:/media/rosetta/rosetta:CF' | sudo tee /proc/sys/fs/binfmt_misc/register
 ```
-Por fim, habilite o Rosetta no update-binfmts:
+Finally, enable Rosetta in update-binfmts:
 ```bash
 sudo update-binfmts --enable rosetta
 ```
 
-Para garantir que o Rosetta seja montado automaticamente no boot, temos que registrar o ponto de montagem no `/etc/fstab`, no terminal:
+To ensure Rosetta is mounted automatically on boot, we must register the mount point in `/etc/fstab`. In the terminal:
 
 ```bash
 sudo nano /etc/fstab
 ```
 
-Adicione a seguinte linha no final do arquivo:
+Add the following line to the end of the file:
 
 ```text
 rosetta /media/rosetta virtiofs rosetta,nofail,defaults 0 0
 ```
-Aperte `control + O`, `return` e `control + X`, para sair e salvar. Agora vamos criar o script de montagem no `/etc/rc.local`. Como o driver do Rosetta finaliza seu carregamento apenas no fim do boot, o `rc.local` garante a montagem efetiva da pasta.
+Press `control + O`, `return` and `control + X` to save and exit. Now let's create the mount script in `/etc/rc.local`. Since the Rosetta driver finishes loading only at the end of the boot process, `rc.local` ensures the folder is effectively mounted.
 
 ```bash
 sudo nano /etc/rc.local
 ```
-Cole o seguinte conteúdo:
+Paste the following content:
 ```text
 #!/bin/sh -e
 
@@ -205,21 +199,21 @@ echo ':rosetta:M::\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x0
 
 exit 0
 ```
-Aperte `control + O`, `return` e `control + X`, para sair e salvar. E dê permissão de execução ao arquivo:
+Press `control + O`, `return` and `control + X` to save and exit. Then grant execution permissions to the file:
 
 ```bash
 sudo chmod +x /etc/rc.local 
 ```
 
-Agora **reinicie** a máquina virtual.
+Now **restart** the virtual machine.
 
-## Adicionando Suporte a 32-bits (i386)
-O ModelSim e várias ferramentas da suíte Quartus dependem fortemente de bibliotecas de 32-bits. Com isso, vamos habilitar a arquitetura i386:
+## Adding 32-bit (i386) Support
+ModelSim and several tools within the Quartus suite rely heavily on 32-bit libraries. Therefore, we will enable the i386 architecture:
 ```bash
 sudo dpkg --add-architecture i386
 sudo apt update
 ```
-E instale as dependências necessárias:
+And install the required dependencies:
 ```bash
 sudo apt install -y \
   libbz2-1.0:i386 \
@@ -239,11 +233,10 @@ sudo apt install -y \
   lib32ncurses6
 ```
 
-## Correção do SQLite3 para o Quartus
-Para evitar falhas de segmentação ou problemas de dependência com o SQLite nativo durante o Map/Fit do Quartus, um 
-wrapper C personalizado (`sqlite_wrapper.c`) foi criado para interceptar e envelopar as chamadas da biblioteca libsqlite3. 
+## SQLite3 Fix for Quartus
+To avoid segmentation faults or dependency issues with native SQLite during Quartus Map/Fit, a custom C wrapper (`sqlite_wrapper.c`) was created to intercept and wrap calls to the libsqlite3 library.
 
-Antes disso, instalamos o compilador cruzado para a arquitetura alvo (`gcc-x86-64-linux-gnu`) e os arquivos de cabeçalho e desenvolvimento da biblioteca SQLite64 (`libsqlite3-dev:amd64`). Isso permite compilar binários e bibliotecas dinâmicas x86_64 nativamente a partir do ambiente Debian ARM64.
+Before that, we install the cross-compiler for the target architecture (`gcc-x86-64-linux-gnu`) as well as the header and development files for the SQLite64 library (`libsqlite3-dev:amd64`). This allows compiling x86_64 binaries and dynamic libraries natively from the Debian ARM64 environment.
 
 ```bash
 sudo apt update
@@ -251,89 +244,88 @@ sudo apt install gcc-x86-64-linux-gnu libsqlite3-dev
 sudo apt install libsqlite3-dev:amd64
 ```
 
-Agora baixe o arquivo `sqlite_wrapper.c` nesse repositório, passe para a VM e cole no terminal:
+Now download the `sqlite_wrapper.c` file from this repository, transfer it to the VM, and paste the following in the terminal:
 ```bash
 x86_64-linux-gnu-gcc -shared -fPIC -o libccl_sqlite3.so sqlite_wrapper.c -I/usr/include -L/usr/lib/x86_64-linux-gnu -lsqlite3
 cp libccl_sqlite3.so ~/intelFPGA_lite/18.1/quartus/linux64/
 ```
-## Variáveis de Ambiente
+## Environment Variables
 
-Para garantir que os binários sejam encontrados e executados na arquitetura correta, as seguintes variáveis foram 
-adicionadas ao final do arquivo `~/.bashrc`.
+To ensure binaries are located and executed under the correct architecture, the following variables were added to the end of the `~/.bashrc` file.
 
-Abra o arquivo `~/.bashrc` com um editor de texto (como o `nano`):
+Open the `~/.bashrc` file with a text editor (such as `nano`):
 ```bash
 nano ~/.bashrc
 ```
 
-Cole as seguintes linhas no final do arquivo:
+Paste the following lines at the end of the file:
 
 ```bash
-export QSYS_ROOTDIR="/home/SEU_USUARIO/intelFPGA_lite/18.1/quartus/sopc_builder/bin"
+export QSYS_ROOTDIR="/home/YOUR_USERNAME/intelFPGA_lite/18.1/quartus/sopc_builder/bin"
 export QENV_DISABLE_AVX=1
 export MALLOC_CHECK_=0
-export PATH=$PATH:/home/SEU_USUARIO/intelFPGA_lite/18.1/quartus/bin
+export PATH=$PATH:/home/YOUR_USERNAME/intelFPGA_lite/18.1/quartus/bin
 export MTI_VCO_MODE=32
-export PATH=/home/SEU_USUARIO/intelFPGA_lite/18.1/modelsim_ase/bin:$PATH
+export PATH=/home/YOUR_USERNAME/intelFPGA_lite/18.1/modelsim_ase/bin:$PATH
 ```
-Aperte `control + O`, `return` e `control + X`, para sair e salvar.
+Press `control + O`, `return` and `control + X` to save and exit.
 
-Após adicionar rode:
+After adding them, run:
 ```bash
 source ~/.bashrc
 ```
 
-## Correção do Script de Ambiente do Quartus (`qenv.sh`)
-Para permitir que o script de inicialização rode dentro da VM ARM64 sem abortar, alteramos as regras de detecção de arquitetura no arquivo `qenv.sh`.
+## Quartus Environment Script Fix (`qenv.sh`)
+To allow the startup script to run inside the ARM64 VM without aborting, we modify the architecture detection rules in the `qenv.sh` file.
 
-0. **Libere permissão de escrita e abra o arquivo:**
+0. **Grant write permission and open the file:**
 ```bash
 chmod +w ~/intelFPGA_lite/18.1/quartus/adm/qenv.sh
 nano ~/intelFPGA_lite/18.1/quartus/adm/qenv.sh
 ```
-1. **Injete a detecção de arquitetura ARM64:**
-Localize a linha que contém `# We don't support processors without SSE extensions` e insira o seguinte bloco de código logo acima dela:
+1. **Inject ARM64 architecture detection:**
+Locate the line containing `# We don't support processors without SSE extensions` and insert the following code block right above it:
 ```bash
 if test `uname -m` = "aarch64" ; then
     export QUARTUS_BIT_TYPE=64
 fi
 ```
-2. **Bypasse a validação de processador x86:**
-Comente (adicione `#` no início das linhas) todo o bloco de código localizado entre a linha:
+2. **Bypass x86 processor validation:**
+Comment out (add `#` to the beginning of the lines) the entire block of code located between the line:
 
 `# We don't support processors without SSE extensions...`
 
-E a linha:
+And the line:
 
 `##### Determine what bitness executables...`
 
-3. **Salvar e fechar:**
-Aperte `control + O`, `return` e `control + X`, para sair e salvar.
+3. **Save and exit:**
+Press `control + O`, `return` and `control + X` to save and exit.
 
-## Patch de Compatibilidade do ModelSim 
-O ModelSim (ASE) possui um script interno chamado `vco` que gerencia o ambiente de execução e a detecção do kernel Linux. Em distribuições modernas (e sob ambientes ARM/emulação), esse script falha ao tentar localizar binários de 32 bits. Para liberar a edição do script e aplicar as correções:
+## ModelSim Compatibility Patch
+ModelSim (ASE) uses an internal script called `vco` to manage the runtime environment and Linux kernel detection. On modern distributions (and under ARM/emulation environments), this script fails when attempting to locate 32-bit binaries. To make the script editable and apply the necessary fixes:
 
 ```bash
 chmod +w ~/intelFPGA_lite/18.1/modelsim_ase/vco
 nano ~/intelFPGA_lite/18.1/modelsim_ase/vco
 ```
-### Tabela de Modificações no Arquivo `vco`
+### `vco` File Modifications Table
 
-| Linha / Trecho | Código Original | Código Modificado | Ponto de Edição |
+| Line / Snippet | Original Code | Modified Code | Editing Location |
 | :---: | :---: | :---: | :---: |
-| **Definição de Arquitetura** | `mode=${MTI_VCO_MODE:-""}` | `mode=${MTI_VCO_MODE:-"32"}` | <img width="721" height="452" alt="GNU nano 5 4" src="https://github.com/user-attachments/assets/3f076f04-d886-4717-87fe-ff508b1176dc" /> |
-| **Injeção de Bibliotecas** | *(Abaixo de `` dir=`dirname "$arg0"` ``)* | `export LD_LIBRARY_PATH=${dir}/lib32:$LD_LIBRARY_PATH` | <img width="722" height="456" alt="File Edit View Terminal Tabs Heig" src="https://github.com/user-attachments/assets/b6bad7cc-8e68-456e-b8c6-77ec6d420c30" /> |
-| **Tratamento do Kernel** | `*) vco="linux_rh60" ;;` | `*) vco="linux" ;;` | <img width="723" height="456" alt="Terminal - raphael-debian" src="https://github.com/user-attachments/assets/31567467-7fe0-42e8-bbca-d709327fe1b7" /> |
+| **Architecture Definition** | `mode=${MTI_VCO_MODE:-""}` | `mode=${MTI_VCO_MODE:-"32"}` | <img width="721" height="452" alt="GNU nano 5 4" src="https://github.com/user-attachments/assets/3f076f04-d886-4717-87fe-ff508b1176dc" /> |
+| **Library Injection** | *(Bellow `` dir=`dirname "$arg0"` ``)* | `export LD_LIBRARY_PATH=${dir}/lib32:$LD_LIBRARY_PATH` | <img width="722" height="456" alt="File Edit View Terminal Tabs Heig" src="https://github.com/user-attachments/assets/b6bad7cc-8e68-456e-b8c6-77ec6d420c30" /> |
+| **Kernel Handling** | `*) vco="linux_rh60" ;;` | `*) vco="linux" ;;` | <img width="723" height="456" alt="Terminal - raphael-debian" src="https://github.com/user-attachments/assets/31567467-7fe0-42e8-bbca-d709327fe1b7" /> |
 
-Aperte `control + O`, `return` e `control + X`, para sair e salvar.
+Press `control + O`, `return` and `control + X` to save and exit.
 
-## Correção da Interface Gráfica do ModelSim (FreeType)
-O ModelSim exige uma versão específica legada do FreeType. Foi necessário compilar a versão `2.4.12` a partir do código-fonte com flags de 32-bits. Primeiro, instale o GCC e ferramentas de build para 32-bits:
+## ModelSim Graphical Interface Fix (FreeType)
+ModelSim requires a specific legacy version of FreeType. It was necessary to compile version `2.4.12` from source using 32-bit flags. First, install GCC and build tools for 32-bit:
 ```bash
 sudo apt install -y gcc:i386 g++:i386 make:i386 curl tar bzip2
 ```
 
-Agora baixe o código-fonte do FreeType 2.4.12 original e faça a compilação direcionada para a arquitetura i686:
+Now download the original FreeType 2.4.12 source code and compile it targeting the i686 architecture:
 ```bash
 cd ~/Downloads
 curl -L -o freetype-2.4.12.tar.bz2 "https://downloads.sourceforge.net/project/freetype/freetype2/2.4.12/freetype-2.4.12.tar.bz2"
@@ -343,7 +335,7 @@ cd freetype-2.4.12
 make -j$(nproc)
 ```
 
-Em seguida, remova qualquer diretório lib32 criado anteriormente para evitar conflitos de permissão, crie a pasta dedicada do ModelSim e copie os arquivos gerados:
+Next, remove any previously created lib32 directory to avoid permission conflicts, create ModelSim's dedicated folder, and copy the generated files:
 ```bash
 sudo rm -rf ~/intelFPGA_lite/18.1/modelsim_ase/lib32
 mkdir -p ~/intelFPGA_lite/18.1/modelsim_ase/lib32
@@ -352,43 +344,40 @@ ln -sf /usr/lib/i386-linux-gnu/libfontconfig.so.1 ~/intelFPGA_lite/18.1/modelsim
 sudo chown -R $USER:$USER ~/intelFPGA_lite/18.1/modelsim_ase/lib32
 ```
 
-Por fim, force o ModelSim a carregar a nova pasta lib32 antes das bibliotecas do sistema adicionando a variável no seu ~/.bashrc:
+Finally, force ModelSim to load the new lib32 directory before system libraries by adding the variable to your `~/.bashrc`:
 ```bash
 echo 'export LD_LIBRARY_PATH=$HOME/intelFPGA_lite/18.1/modelsim_ase/lib32:$LD_LIBRARY_PATH' >> ~/.bashrc
 source ~/.bashrc
 ```
 
-Pronto! Com essas correções aplicadas, o ambiente está totalmente configurado e pronto para você compilar seus projetos no Quartus Prime e rodar as simulações no ModelSim sem erros de arquitetura ou falhas de segmentação.
+All set! With these fixes applied, the environment is fully configured and ready for you to compile your projects in Quartus Prime and run simulations in ModelSim without architecture errors or segmentation faults.
 
-## Comandos Úteis
-Agora você pode rodar os fluxos do Quartus via terminal (CLI):
+## Useful Commands
+Now you can run Quartus workflows via terminal (CLI):
 
-* **Compilar** (Sintetizar, Mapear e Fazer o Fit) um projeto:
+* **Compile** (Synthesize, Map, and Fit) a project:
 ```bash
-quartus_map --read_settings_files=on nome_do_projeto
-quartus_fit --read_settings_files=on nome_do_projeto
-quartus_asm --read_settings_files=on nome_do_projeto
+quartus_map --read_settings_files=on project_name
+quartus_fit --read_settings_files=on project_name
+quartus_asm --read_settings_files=on project_name
 ```
 
-Tendo como resultado o arquivo `.sof` para poder subir na placa com o `openFPGAloader`.
+This yields the `.sof` file to flash onto the board using `openFPGAloader`.
 
-* **Simular** por meio do ModelSim (VHDL):
+* **Simulate** using ModelSim (VHDL):
 ```bash
 vlib work
-vcom projeto.vhd 
-vcom tb_projeto.vhd 
-vsim tb_projeto -do "add wave -radix binary *; run 100 ns; wave zoom full; quit"
+vcom project.vhd 
+vcom tb_project.vhd 
+vsim tb_project -do "add wave -radix binary *; run 100 ns; wave zoom full; quit"
 ```
 <div align="center">
 <img width="60%"  alt="PinPlanner" src="https://github.com/user-attachments/assets/223815f8-3745-42de-b537-338510eb7e32" />
 </div>
 
-### Sobre a licença do Intel Quartus Prime Lite Edition
-O **Quartus Prime Lite Edition** é distribuído gratuitamente pela Intel/Altera, porém com uma ressalva importante: a licença gratuita cobre 
-apenas uma lista específica de dispositivos suportados — famílias como **Cyclone**, **MAX 10** e **Arria II**, entre outras de entrada. 
-Dispositivos de médio e alto desempenho (como as famílias **Arria 10**, **Stratix** e **Cyclone V GX/GT** em certas configurações) exigem uma 
-licença paga das edições **Standard** ou **Pro**.
+### Regarding the Intel Quartus Prime Lite Edition License
+**Quartus Prime Lite Edition** is distributed for free by Intel/Altera, with an important caveat: the free license covers only a specific list of supported devices—entry-level families such as **Cyclone**, **MAX 10**, and **Arria II**, among others. Medium and high-performance devices (such as the **Arria 10**, **Stratix**, and **Cyclone V GX/GT** families in certain configurations) require a paid license from the **Standard** or **Pro** editions.
 
-> Este repositório documenta apenas o processo de **virtualização e execução** da ferramenta em Apple Silicon. O uso do Quartus Prime está sujeito aos termos de licença da própria Intel/Altera, disponíveis em seu site oficial.
+> This repository documents only the **virtualization and execution** process of the tool on Apple Silicon. The use of Quartus Prime is subject to Intel/Altera's own licensing terms, available on their official website.
 
 <img width="1470" height="956" alt="TelaCheiaQuartusMac" src="https://github.com/user-attachments/assets/d6fbd427-ee68-4bec-8fdc-0c9b28e79a7d" />
