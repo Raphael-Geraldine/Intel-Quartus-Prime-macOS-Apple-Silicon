@@ -1,6 +1,8 @@
 # Intel Quartus Prime on Apple Silicon
 
-This repository documents the process and configuration required to run **Intel Quartus Prime 18.1** (a traditional and legacy FPGA development tool target x86_64 architecture) on a **MacBook Air M4 (Apple Silicon)** running **macOS Tahoe 26.5.2**.
+> **Languages:** 🇺🇸 **English** or 🇧🇷 [Português](https://github.com/Raphael-Geraldine/Intel-Quartus-Prime-macOS-Apple-Silicon/blob/main/README.pt_br.md)
+
+This repository documents the process and configuration required to run **Intel Quartus Prime 18.1** (a traditional and legacy FPGA development tool targeting x86_64 architecture) on a **MacBook Air M4 (Apple Silicon)** running **macOS Tahoe 26.5.2**.
 
 <img width="1470" height="956" alt="QuartusNoMac" src="https://github.com/user-attachments/assets/86072088-9405-4d7d-a598-e359692524a2" />
 
