@@ -126,9 +126,14 @@ chmod +x setup.sh
 ./setup.sh
 ```
 
-O **instalador gráfico** irá abrir, e siga com as instruções. Marque no final a opção de criar um atalho no desktop.
+O **instalador gráfico** irá abrir, escolha o caminho padrão e siga com as instruções. Marque no final a opção de criar um atalho no desktop.
 
-> **Nota**: após a instalação o Quartus tentará abrir sem sucesso, não se preocupe, ainda tem mais alterações a serem feitas.
+<div align="center">
+<img width="49%" alt="QuartusDownload" src="https://github.com/user-attachments/assets/ee384bf4-54ad-4d61-962c-d46efbe1661a" />
+<img width="49%" alt="Shortcut" src="https://github.com/user-attachments/assets/2aa93535-dc29-4d6c-b14e-5dc0c876f3ca" />
+</div>
+
+> **Nota**: após a instalação se tentar abrir o Quartus não será possível, mas não se preocupe, ainda tem mais alterações a serem feitas.
 
 ### Correção da Biblioteca Legada `libpng12` (Pós-Instalação)
 O Intel Quartus Prime 18.1 depende de uma versão antiga da biblioteca PNG (`libpng12.so.0`) para renderizar ícones e componentes da sua interface gráfica. Como o Debian moderno não disponibiliza mais esse pacote nos repositórios oficiais, extraímos manualmente o binário `amd64` da biblioteca e o colocamos diretamente no diretório de binários do Quartus.
@@ -238,7 +243,7 @@ sudo apt install -y \
 Para evitar falhas de segmentação ou problemas de dependência com o SQLite nativo durante o Map/Fit do Quartus, um 
 wrapper C personalizado (`sqlite_wrapper.c`) foi criado para interceptar e envelopar as chamadas da biblioteca libsqlite3. 
 
-Antes disso, instalamos o compilador cruzado para a arquitetura alvo (`gcc-x86-64-linux-gnu`) e os arquivos de cabeçalho e desenvolvimento da biblioteca SQLite64 (`libsqlite3-dev:amd64`). Isso permite compilar binários e bibliotecas dinâmicas x86_64 nativamente a partir do ambiente Debian `ARM64`.
+Antes disso, instalamos o compilador cruzado para a arquitetura alvo (`gcc-x86-64-linux-gnu`) e os arquivos de cabeçalho e desenvolvimento da biblioteca SQLite64 (`libsqlite3-dev:amd64`). Isso permite compilar binários e bibliotecas dinâmicas x86_64 nativamente a partir do ambiente Debian ARM64.
 
 ```bash
 sudo apt update
@@ -374,9 +379,9 @@ vcom projeto.vhd
 vcom tb_projeto.vhd 
 vsim tb_projeto -do "add wave -radix binary *; run 100 ns; wave zoom full; quit"
 ```
-
-
-<img width="1470" height="956" alt="TelaCheiaQuartusMac" src="https://github.com/user-attachments/assets/d6fbd427-ee68-4bec-8fdc-0c9b28e79a7d" />
+<div align="center">
+<img width="60%"  alt="PinPlanner" src="https://github.com/user-attachments/assets/223815f8-3745-42de-b537-338510eb7e32" />
+</div>
 
 ### Sobre a licença do Intel Quartus Prime Lite Edition
 O **Quartus Prime Lite Edition** é distribuído gratuitamente pela Intel/Altera, porém com uma ressalva importante: a licença gratuita cobre 
@@ -385,3 +390,5 @@ Dispositivos de médio e alto desempenho (como as famílias **Arria 10**, **Stra
 licença paga das edições **Standard** ou **Pro**.
 
 > Este repositório documenta apenas o processo de **virtualização e execução** da ferramenta em Apple Silicon. O uso do Quartus Prime está sujeito aos termos de licença da própria Intel/Altera, disponíveis em seu site oficial.
+
+<img width="1470" height="956" alt="TelaCheiaQuartusMac" src="https://github.com/user-attachments/assets/d6fbd427-ee68-4bec-8fdc-0c9b28e79a7d" />
