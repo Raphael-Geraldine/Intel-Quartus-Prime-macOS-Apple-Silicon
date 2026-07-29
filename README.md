@@ -124,9 +124,16 @@ chmod +x setup.sh
 
 The **GUI installer** will open; choose the default path and follow the instructions. At the end, check the option to create a desktop shortcut.
 
-<div style="display: flex; justify-content: center; gap: 10px;">
-<img width="48%" alt="QuartusDownload" src="https://github.com/user-attachments/assets/ee384bf4-54ad-4d61-962c-d46efbe1661a" /> <img width="48%" alt="Shortcut" src="https://github.com/user-attachments/assets/2aa93535-dc29-4d6c-b14e-5dc0c876f3ca" />
-</div>
+<table border="0" style="width: 100%;">
+  <tr>
+    <td width="50%" align="center">
+      <img src="https://github.com/user-attachments/assets/ee384bf4-54ad-4d61-962c-d46efbe1661a" width="100%" />
+    </td>
+    <td width="50%" align="center">
+      <img src="https://github.com/user-attachments/assets/2aa93535-dc29-4d6c-b14e-5dc0c876f3ca" width="100%" />
+    </td>
+  </tr>
+</table>
 
 > **Note**: After installation if you choose open Quartus, it won't be possible, do not worry, there are still more changes to be made.
 
