@@ -125,8 +125,7 @@ chmod +x setup.sh
 The **GUI installer** will open; choose the default path and follow the instructions. At the end, check the option to create a desktop shortcut.
 
 <div align="center">
-<img width="49%" alt="QuartusDownload" src="https://github.com/user-attachments/assets/ee384bf4-54ad-4d61-962c-d46efbe1661a" />
-<img width="49%" alt="Shortcut" src="https://github.com/user-attachments/assets/2aa93535-dc29-4d6c-b14e-5dc0c876f3ca" />
+<img width="48%" alt="QuartusDownload" src="https://github.com/user-attachments/assets/ee384bf4-54ad-4d61-962c-d46efbe1661a" /> <img width="48%" alt="Shortcut" src="https://github.com/user-attachments/assets/2aa93535-dc29-4d6c-b14e-5dc0c876f3ca" />
 </div>
 
 > **Note**: After installation if you choose open Quartus, it won't be possible, do not worry, there are still more changes to be made.
@@ -375,8 +374,7 @@ vsim tb_project -do "add wave -radix binary *; run 100 ns; wave zoom full; quit"
 ```
 
 <div align="center">
-<img width="49%"  alt="PinPlanner" src="https://github.com/user-attachments/assets/223815f8-3745-42de-b537-338510eb7e32" />
-<img width="49%" alt="ModelSim" src="https://github.com/user-attachments/assets/267614ee-cfde-46c9-8c07-5ec35b1dff85" />
+<img width="48%"  alt="PinPlanner" src="https://github.com/user-attachments/assets/223815f8-3745-42de-b537-338510eb7e32" /> <img width="48%" alt="ModelSim" src="https://github.com/user-attachments/assets/267614ee-cfde-46c9-8c07-5ec35b1dff85" />
 </div>
 
 ### Regarding the Intel Quartus Prime Lite Edition License
