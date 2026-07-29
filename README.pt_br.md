@@ -130,10 +130,16 @@ chmod +x setup.sh
 
 O **instalador gráfico** irá abrir, escolha o caminho padrão e siga com as instruções. Marque no final a opção de criar um atalho no desktop.
 
-<div align="center">
-<img width="49%" alt="QuartusDownload" src="https://github.com/user-attachments/assets/ee384bf4-54ad-4d61-962c-d46efbe1661a" />
-<img width="49%" alt="Shortcut" src="https://github.com/user-attachments/assets/2aa93535-dc29-4d6c-b14e-5dc0c876f3ca" />
-</div>
+<table border="0" style="width: 100%;">
+  <tr>
+    <td width="50%" align="center">
+      <img src="https://github.com/user-attachments/assets/ee384bf4-54ad-4d61-962c-d46efbe1661a" width="100%" />
+    </td>
+    <td width="50%" align="center">
+      <img src="https://github.com/user-attachments/assets/2aa93535-dc29-4d6c-b14e-5dc0c876f3ca" width="100%" />
+    </td>
+  </tr>
+</table>
 
 > **Nota**: após a instalação se tentar abrir o Quartus não será possível, mas não se preocupe, ainda tem mais alterações a serem feitas.
 
@@ -381,10 +387,16 @@ vcom projeto.vhd
 vcom tb_projeto.vhd 
 vsim tb_projeto -do "add wave -radix binary *; run 100 ns; wave zoom full; quit"
 ```
-<div align="center">
-<img width="49%"  alt="PinPlanner" src="https://github.com/user-attachments/assets/223815f8-3745-42de-b537-338510eb7e32" />
-<img width="49%" alt="ModelSim" src="https://github.com/user-attachments/assets/267614ee-cfde-46c9-8c07-5ec35b1dff85" />
-</div>
+<table border="0" style="width: 100%;">
+  <tr>
+    <td width="50%" align="center">
+      <img src="https://github.com/user-attachments/assets/223815f8-3745-42de-b537-338510eb7e32" width="100%" alt="PinPlanner" />
+    </td>
+    <td width="50%" align="center">
+      <img src="https://github.com/user-attachments/assets/267614ee-cfde-46c9-8c07-5ec35b1dff85" width="100%" alt="ModelSim" />
+    </td>
+  </tr>
+</table>
 
 ### Sobre a licença do Intel Quartus Prime Lite Edition
 O **Quartus Prime Lite Edition** é distribuído gratuitamente pela Intel/Altera, porém com uma ressalva importante: a licença gratuita cobre 
