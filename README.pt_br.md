@@ -407,3 +407,9 @@ licença paga das edições **Standard** ou **Pro**.
 > Este repositório documenta apenas o processo de **virtualização e execução** da ferramenta em Apple Silicon. O uso do Quartus Prime está sujeito aos termos de licença da própria Intel/Altera, disponíveis em seu site oficial.
 
 <img width="1470" height="956" alt="TelaCheiaQuartusMac" src="https://github.com/user-attachments/assets/d6fbd427-ee68-4bec-8fdc-0c9b28e79a7d" />
+
+### Aviso para usuários da DE10-Lite
+
+Se você está utilizando a placa **DE10-Lite**, o processo para carregar seu circuito na memória _SRAM_ via `openFPGAloader` requer um procedimento específico, por limitações do suporte atual. Consulte o passo a passo dedicado:
+
+[**Guia de Gravação para DE10-Lite no macOS**](https://github.com/Raphael-Geraldine/Intel-Quartus-Prime-macOS-Apple-Silicon/blob/main/docs/DE10Lite-Notes.pt_br.md)
