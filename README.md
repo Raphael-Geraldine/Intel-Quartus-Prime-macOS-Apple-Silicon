@@ -397,3 +397,9 @@ vsim tb_project -do "add wave -radix binary *; run 100 ns; wave zoom full; quit"
 > This repository documents only the **virtualization and execution** process of the tool on Apple Silicon. The use of Quartus Prime is subject to Intel/Altera's own licensing terms, available on their official website.
 
 <img width="1470" height="956" alt="TelaCheiaQuartusMac" src="https://github.com/user-attachments/assets/d6fbd427-ee68-4bec-8fdc-0c9b28e79a7d" />
+
+### Notice for DE10-Lite users
+
+If you are using the **DE10-Lite** board, the process of loading your circuit into _SRAM_ memory via `openFPGAloader` requires a specific procedure, due to current support limitations. Check out the dedicated step-by-step guide:
+
+[**DE10-Lite Programming Guide for macOS**](https://github.com/Raphael-Geraldine/Intel-Quartus-Prime-macOS-Apple-Silicon/blob/main/docs/DE10Lite-Notes.md)
