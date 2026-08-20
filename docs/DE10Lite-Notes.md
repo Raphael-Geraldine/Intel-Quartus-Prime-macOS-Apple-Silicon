@@ -1,4 +1,4 @@
-# Relevant information about programming on macOS for DE10-Lite boards
+# Relevant information about bitstream loading on macOS for DE10-Lite boards
 
 > As of now, the latest version of `openFPGAloader` only accepts a few file types, such as `.pof` and `.svf`; however, traditional `.sof` files have not yet been decoded by `openFPGAloader` for the DE10-Lite, because
 > they contain certain proprietary Intel/Altera patterns and metadata.
