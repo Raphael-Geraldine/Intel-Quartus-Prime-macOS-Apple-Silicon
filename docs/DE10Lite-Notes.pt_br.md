@@ -46,7 +46,7 @@ sudo make install
 ## Modificação importante no arquivo
 
 Por padrão, os arquivos `.svf` contêm instruções de limpar a memória _Flash_ ao serem subidos 
-na placa. Para rodar o circuito direto na SRAM e manter a _Flash_ intacta (exatamente como o .sof faz):
+na placa. Para rodar o circuito direto na SRAM e manter a _Flash_ intacta (exatamente como o `.sof` faz):
 
 1º) Abra o arquivo `.svf` no TextEdit.
 
