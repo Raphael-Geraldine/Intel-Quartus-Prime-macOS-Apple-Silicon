@@ -402,4 +402,4 @@ vsim tb_project -do "add wave -radix binary *; run 100 ns; wave zoom full; quit"
 
 If you are using the **DE10-Lite** board, the process of loading your circuit into _SRAM_ memory via `openFPGAloader` requires a specific procedure, due to current support limitations. Check out the dedicated step-by-step guide:
 
-[**DE10-Lite Programming Guide for macOS**](https://github.com/Raphael-Geraldine/Intel-Quartus-Prime-macOS-Apple-Silicon/blob/main/docs/DE10Lite-Notes.md)
+[**DE10-Lite Bitstream Loading Guide for macOS**](https://github.com/Raphael-Geraldine/Intel-Quartus-Prime-macOS-Apple-Silicon/blob/main/docs/DE10Lite-Notes.md)
