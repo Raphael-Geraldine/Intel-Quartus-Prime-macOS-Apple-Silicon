@@ -54,9 +54,7 @@ na placa. Para rodar o circuito direto na SRAM e manter a _Flash_ intacta (exata
 
 3º) Salve e suba o `.svf` normalmente.
 
-<p align="center">
-  <img width="768" height="534" alt="Screenshot 2026-08-20 at 17 50 07" src="https://github.com/user-attachments/assets/5b40a98e-6594-40a0-bc1c-7e7d15c25267" />
-</p>
+![SVFModification](https://github.com/user-attachments/assets/5b40a98e-6594-40a0-bc1c-7e7d15c25267)
 
 ## Subindo o `.svf` para a DE10-Lite
 
