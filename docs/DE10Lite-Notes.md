@@ -54,9 +54,7 @@ to the board. To run the circuit directly on SRAM and keep the Flash intact (exa
 
 3rd) Save and upload the `.svf` normally.
 
-<p align="center">
-  <img width="768" height="534" alt="Screenshot 2026-08-20 at 17 50 07" src="https://github.com/user-attachments/assets/5b40a98e-6594-40a0-bc1c-7e7d15c25267" />
-</p>
+![SVFModification](https://github.com/user-attachments/assets/5b40a98e-6594-40a0-bc1c-7e7d15c25267)
 
 ## Uploading the `.svf` to the DE10-Lite
 
