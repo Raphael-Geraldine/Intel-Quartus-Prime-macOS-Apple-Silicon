@@ -50,7 +50,7 @@ to the board. To run the circuit directly on SRAM and keep the Flash intact (exa
 
 1st) Open the `.svf` file in TextEdit.
 
-2nd) Delete the block that starts at `!Max 10 DSM Clear` and goes until the end of `!Max 10 DSM Verify` (right before `!Max 10 Program ICB`; it should look similar to the image below).
+2nd) Delete the block that starts at `!Max 10 DSM Clear` and goes until the end of `!Max 10 DSM Verify` (right before `!Max 10 Disable ISP`; it should look similar to the image below).
 
 3rd) Save and upload the `.svf` normally.
 
