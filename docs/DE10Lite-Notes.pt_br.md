@@ -50,7 +50,7 @@ na placa. Para rodar o circuito direto na SRAM e manter a _Flash_ intacta (exata
 
 1º) Abra o arquivo `.svf` no TextEdit.
 
-2º) Apague o bloco que começa em `!Max 10 DSM Clear` e vai até o final de `!Max 10 DSM Verify` (logo antes de `!Max 10 Program ICB`, deve ficar semelhante à imagem abaixo).
+2º) Apague o bloco que começa em `!Max 10 DSM Clear` e vai até o final de `!Max 10 DSM Verify` (logo antes de `!Max 10 Disable ISP`, deve ficar semelhante à imagem abaixo).
 
 3º) Salve e suba o `.svf` normalmente.
 
